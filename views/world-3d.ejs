@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+    <script src="./static/js/jquery-2.2.0.js"></script>
+    <script src="./static/js/wsConfig.js"></script>
+    <script src="./static/js/3d2/stationInfo.js"></script>
+    <script src="./static/js/d3.js"></script>
+    <script src="./static/js/attackTypeConfig.js"></script>
+    <script src="./static/js/topojson.v1.min.js"></script>
+    <script src="./static/js/moment.min.js"></script>
+    <script src="./static/js/getpixelcolor.js"></script>
+    <script src="./static/js/3d2/planetaryjs_color2.js"></script>
+    <script src="./static/js/3d2/earthMain2.js"></script>
+    <script src="./static/js/socket.io.js"></script>
+    <script src="./static/js/3d2/attack-ws.js"></script>
+    <script src="./static/js/3d2/deal-ws.js"></script>
+    <script src="./static/js/3d2/control.js"></script>
+
+    <script src="./static/js/3d2/main-3d-3.js"></script>
+
+    <link rel="stylesheet" href="./static/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./static/css/earthMain.css">
+    <title>全球监控</title>
+</head>
+<body>
+    <!--<div class="nav-ctn" id="a1">-->
+        <!--<div class="nav-main">-->
+
+        <!--</div>-->
+    <!--</div>-->
+
+
+
+    <div class="map-ctn">
+
+        <canvas id="mapCanvas"></canvas>
+
+    </div>
+
+    <div id="leftCtl" class="left-ctl" data-trig="1">
+        <div id="leftCtlMin" class="left-ctl-min"></div>
+        <div class="ctl-line">
+            <button id="stopRotate">stop rotate</button>
+        </div>
+        <div class="ctl-line">
+            <button id="startRotate">start rotate</button>
+        </div>
+        <div class="ctl-line">
+            <button id="addPing">add ping</button>
+        </div>
+        <div class="ctl-line">
+            <button id="addLine">add Line</button>
+        </div>
+        <div class="ctl-line">
+            <button id="graticuleTrigger" data-need="1">graticuleTrigger</button>
+        </div>
+        <div class="ctl-line">
+            <input value="40" style="position: relative; float: left; width: 60px;" type="text" id="srcLat" placeholder="lat">
+            <input value="116" style="position: relative; float: left; width: 60px;" type="text" id="srcLng" placeholder="lng">
+        </div>
+        <div class="ctl-line">
+            <input value="0" style="position: relative; float: left; width: 60px;" type="text" id="dstLat" placeholder="lat">
+            <input value="0" style="position: relative; float: left; width: 60px;" type="text" id="dstLng" placeholder="lng">
+        </div>
+        <div class="ctl-line">
+            <button id="submitInfo" style="position: relative;">submit</button>
+        </div>
+        <div class="ctl-line">
+            <button id="fixLine" style="position: relative;">fix line</button>
+        </div>
+        <div class="ctl-line">
+            <button id="addDot" style="position: relative;">add dot</button>
+        </div>
+        <div class="ctl-line">
+            <button id="stop">stop</button>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="attack-type-ctn" id="attack-type-ctn">
+        <!--<div class="left"></div>-->
+
+
+        <!--<div class="bottom"></div>-->
+
+    </div>
+
+
+    <div class="left-cmd-panel" id="left-cmd-panel">
+        <div class="btn" id="trig-graticule" data-trig="1">
+            经纬度
+        </div>
+        <div class="btn" id="trig-rotate" data-trig="1">
+            自转
+        </div>
+        <div class="show-trig"  id="left-cmd-trig" data-trig="1">
+            <i class="icon-double-angle-left"></i>
+        </div>
+    </div>
+
+
+
+
+    <div class="panel" id="panel" data-trig="1">
+        <div class="title">
+            <div class="atk-line title-text">
+
+                <div class="cell time">
+                    时间
+                </div>
+                <div class="cell sensor">
+                    传感器
+                </div>
+                <div class="cell infos">
+                    类型
+                </div>
+                <div class="cell src">
+                    来源
+                </div>
+                <div class="cell dst">
+                    目标
+                </div>
+                <div class="cell protocal-a">
+                    通信协议
+                </div>
+                <div class="cell trails">
+                    威胁情报
+                </div>
+                <div class="cell references">
+                    情报来源
+                </div>
+            </div>
+        </div>
+        <div class="min-btn" id="panelMin">
+            <i class="icon-angle-down"></i>
+        </div>
+        <div class="ctn" id="atk-ctn">
+            <!--
+            <div class="atk-line ctn-text">
+                <div class="cell time">
+                    2015-2-21 10:20:30
+                </div>
+                <div class="cell sensor">
+                    sensor1
+                </div>
+                <div class="cell infos">
+                    ARP attack
+                </div>
+                <div class="cell src">
+                    192.168.1.1:2000 Beijing
+                </div>
+                <div class="cell dst">
+                    192.169.222.222 Tianjin
+                </div>
+                <div class="cell protocal-a">
+                    proto
+                </div>
+                <div class="cell protocal-b">
+                    type
+                </div>
+                <div class="cell trails">
+                    trails
+                </div>
+                <div class="cell references">
+                    refer
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+
+    <div class="top-info-ctn" id="top-info-ctn" data-trig="0">
+        <div class="top-info-min" id="top-info-min">
+            <i class="icon-remove-sign"></i>
+        </div>
+
+        <div class="top-info-title" id="top-info-title"></div>
+
+        <div class="top-info-change" id="top-info-change">
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <div class="company-name">
+        锦标科技
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
